@@ -1,0 +1,48 @@
+                      ┌────────────────────────────────┐
+                      │        Scheduler (Timer)        │
+                      │     (Default: every 4 hours)    │
+                      └───────────────────┬─────────────┘
+                                          │
+                                          ▼
+                      ┌────────────────────────────────┐
+                      │         Manager Agent          │
+                      │  - Supervises Core & Backup    │
+                      │  - Ensures Privacy & Security  │
+                      └───────────────────┬─────────────┘
+                                          │
+                   ┌──────────────────────┴──────────────────────┐
+                   │                                             │
+                   ▼                                             ▼
+      ┌────────────────────────────────┐          ┌────────────────────────────────┐
+      │     Core Agent (Primary)       │          │    Backup Agent (Standby)      │
+      │  - Fetch Weather API           │          │  - Monitors Core Agent         │
+      │  - Fetch AQI API (5 Levels)    │          │  - Takes Control on Failure    │
+      │  - Rain + AQI Analysis         │          └──────────────────┬─────────────┘
+      │  - Prepare WhatsApp Alert      │                             │
+      └──────────────────┬─────────────┘                             │
+                          │                                           │
+                          ▼                                           │
+             ┌────────────────────────────────┐                       │
+             │     Is Core Agent Working?     │◄──────────────────────┘
+             └───────────┬───────────┬────────┘
+                         │           │
+                       Yes          No
+                         │           │
+                         ▼           ▼
+        ┌────────────────────────┐   ┌────────────────────────────────────┐
+        │    Send Alert via      │   │     Backup Agent Takes Control     │
+        │      WhatsApp API      │   │  - Calls Weather + AQI API         │
+        └───────────┬────────────┘   │  - Generates Alert                 │
+                    │                │  - Sends WhatsApp Alert            │
+                    ▼                └──────────────────┬──────────────────┘
+      ┌────────────────────────────────┐                 │
+      │      User Receives Alert       │                 │
+      │ (One-Way WhatsApp Notification)│                 │
+      │  - Rain Severity               │                 │
+      │  - AQI Level (5 WHO Levels)    │                 │
+      │  - WHO Health Advice           │                 │
+      │  - “Check Weather” Link        │                 │
+      └──────────────────┬─────────────┘                 │
+                         │                               │
+                         └──────────────► Manager Agent ─┘
+                                   Logs Status & Ends Cycle
